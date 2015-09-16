@@ -5,7 +5,9 @@ OPT = -Wall -pedantic -std=f95 -fbounds-check -O -Wuninitialized -ffpe-trap=inva
 
 OBJDIR = obj
 SRCDIR = src
+TESTBINDIR = tmp
 TESTSRCS := $(wildcard $(SRCDIR)/*_test.f90)
+TESTS := $(TESTSRCS:$(SRCDIR)/%.f90=%)
 SRCS := $(filter-out $(TESTSRCS), $(wildcard $(SRCDIR)/*.f90))
 OBJS := $(SRCS:$(SRCDIR)/%.f90=$(OBJDIR)/%.o)
 
@@ -19,9 +21,19 @@ $(TARGET): $(OBJS)
 	$(LINK.f) $^ $(LOADLIBES) $(OPT) $(LDLIBS) -o $@
 
 clean::
-	@rm -f $(TARGET) ./$(OBJDIR)/*.mod ./$(OBJDIR)/*.o
+	@rm -f $(TARGET) ./$(OBJDIR)/*.mod ./$(OBJDIR)/*.o $(TESTBINDIR)/*_test
 
 all:: clean $(TARGET)
+
+$(TESTBINDIR)/%:
+	$(LINK.f) $^ $(LOADLIBES) $(OPT) $(LDLIBS) -o $@
+
+$(TESTS):
+	@make -s $(TESTBINDIR)/$@
+	@$(TESTBINDIR)/$@ && echo $@ SUCCEEDED || echo $@ FAILED
+
+test::
+	@for test in $(TESTS) ; do $(MAKE) -s $$test; done
 
 # dependencies
 $(OBJDIR)/main.o: \
@@ -29,3 +41,7 @@ $(OBJDIR)/main.o: \
 
 $(OBJDIR)/mod_multiple.o: \
 	$(OBJDIR)/mod_add.mod \
+
+$(TESTBINDIR)/mod_add_test: \
+	$(OBJDIR)/mod_add.o \
+	$(OBJDIR)/mod_add_test.o \
