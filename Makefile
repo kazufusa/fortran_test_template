@@ -5,7 +5,8 @@ OPT = -Wall -pedantic -std=f95 -fbounds-check -O -Wuninitialized -ffpe-trap=inva
 
 OBJDIR = obj
 SRCDIR = src
-SRCS := $(wildcard $(SRCDIR)/*.f90)
+TESTSRCS := $(wildcard $(SRCDIR)/*_test.f90)
+SRCS := $(filter-out $(TESTSRCS), $(wildcard $(SRCDIR)/*.f90))
 OBJS := $(SRCS:$(SRCDIR)/%.f90=$(OBJDIR)/%.o)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.f90
