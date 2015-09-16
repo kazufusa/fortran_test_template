@@ -45,3 +45,8 @@ $(OBJDIR)/mod_multiple.o: \
 $(TESTBINDIR)/mod_add_test: \
 	$(OBJDIR)/mod_add.o \
 	$(OBJDIR)/mod_add_test.o \
+
+$(TESTBINDIR)/mod_multiple_test: \
+	$(OBJDIR)/mod_multiple.o \
+	$(OBJDIR)/mod_multiple_test.o \
+	$(OBJDIR)/mod_add.o \

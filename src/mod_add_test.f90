@@ -7,5 +7,4 @@ program mod_add_test
     print *, "Failed, 1 + 2 should be 3, but", a
     stop 1
   endif
-  print *, "Succeeded"
 end program mod_add_test
