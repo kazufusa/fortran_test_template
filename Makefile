@@ -11,6 +11,11 @@ TESTS := $(TESTSRCS:$(SRCDIR)/%.f90=%)
 SRCS := $(filter-out $(TESTSRCS), $(wildcard $(SRCDIR)/*.f90))
 OBJS := $(SRCS:$(SRCDIR)/%.f90=$(OBJDIR)/%.o)
 
+NO="\033[0m"
+GREEN="\033[32m"
+BRED="\033[31;01m"
+BYELLOW="\033[33;01m"
+
 $(OBJDIR)/%.o: $(SRCDIR)/%.f90
 	$(COMPILE.f) -J $(OBJDIR) $(OPT) $(OUTPUT_OPTION) $<
 
@@ -30,7 +35,7 @@ $(TESTBINDIR)/%:
 
 $(TESTS):
 	@make -s $(TESTBINDIR)/$@
-	@$(TESTBINDIR)/$@ && echo $@ SUCCEEDED || echo $@ FAILED
+	@$(TESTBINDIR)/$@ && echo $(GREEN)$@ SUCCEEDED$(NO) || echo $(BRED)$@ FAILED$(NO);
 
 test::
 	@for test in $(TESTS) ; do $(MAKE) -s $$test; done
